@@ -1,0 +1,17 @@
+# Desensitised output (us-west-2, 2026-10). Account IDs / session IDs removed.
+
+# scheme_bug_demo.py (server running on :8000):
+stateless client     localhost:8000/mcp           -> UnsupportedProtocol: Request URL is missing an 'http://' or 'https://' protocol.
+stateless client     http://localhost:8000/mcp    -> OK (search_kyoto_attractions)
+stateful transport   localhost:8000/mcp           -> ValueError: Invalid HTTP/S URL provided for Streamable HTTP.
+stateful transport   http://localhost:8000/mcp    -> constructed
+
+# stateless server start:
+... | INFO | __main__ | Starting MCP server on 0.0.0.0:8000
+Uvicorn running on http://0.0.0.0:8000
+# curl POST /mcp tools/list -> HTTP 200 (stateless); stateful server returns 400 until initialize/session
+
+# end-to-end deployed runtime (agentcore create --protocol MCP + deploy, then remote_client_sigv4.py):
+Connecting to: https://bedrock-agentcore.us-west-2.amazonaws.com/runtimes/<ENCODED_ARN>/invocations?qualifier=DEFAULT
+Session ID: <session-uuid>
+Tools: ['search_kyoto_attractions']
